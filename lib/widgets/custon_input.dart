@@ -33,7 +33,7 @@ class CustonInput extends StatelessWidget {
         controller: this.textController,
         autocorrect: false,
         obscureText: this.isPasword,
-        keyboardType: TextInputType.emailAddress,
+        keyboardType: this.keyBoardtype,
         decoration: InputDecoration(
             prefixIcon: Icon(this.icon),
             focusedBorder: InputBorder.none,

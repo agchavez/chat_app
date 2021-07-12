@@ -48,6 +48,7 @@ class __FormState extends State<_Form> {
   final emailCrtl = TextEditingController();
   final paswordCtrl = TextEditingController();
   final nameCrtl = TextEditingController();
+  final phoneCtrl = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -62,6 +63,13 @@ class __FormState extends State<_Form> {
               placeholder: "Name",
               keyBoardtype: TextInputType.text,
               textController: nameCrtl,
+            ),
+            CustonInput(
+              icon: Icons.lock_outlined,
+              placeholder: "Number",
+              keyBoardtype: TextInputType.phone,
+              isPasword: true,
+              textController: phoneCtrl,
             ),
             CustonInput(
               icon: Icons.email_outlined,
