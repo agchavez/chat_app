@@ -12,11 +12,13 @@ class UserPage extends StatelessWidget {
         phone: "32762869",
         msj: 2,
         online: true,
+        img: "assets/porfile1.png",
         uid: "1"),
     User(
         email: 'agchavez@email.com',
         name: "Angel Chavez",
         phone: "31998850",
+        img: "assets/porfile2.png",
         msj: 0,
         online: false,
         uid: "3"),
@@ -24,6 +26,7 @@ class UserPage extends StatelessWidget {
         email: 'jose@email.com',
         name: "Jose Martin",
         phone: "31998850",
+        img: "",
         msj: 5,
         online: true,
         uid: "2")
@@ -97,7 +100,13 @@ class UserPage extends StatelessWidget {
         ],
       ),
       leading: CircleAvatar(
-        child: Text(user.name.substring(0, 2)),
+        child: ClipRRect(
+            borderRadius: BorderRadius.circular(18),
+            child: user.img != ""
+                ? Image(
+                    image: AssetImage(user.img),
+                  )
+                : Text(user.name.substring(0, 2))),
       ),
       trailing: Container(
         width: 25,
