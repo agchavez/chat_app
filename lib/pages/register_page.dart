@@ -1,3 +1,4 @@
+import 'package:chat_app/utils/validate-field.dart';
 import 'package:chat_app/widgets/buttonBlue.dart';
 import 'package:chat_app/widgets/custon_input.dart';
 import 'package:chat_app/widgets/labels_footer.dart';
@@ -49,6 +50,12 @@ class __FormState extends State<_Form> {
   final paswordCtrl = TextEditingController();
   final nameCrtl = TextEditingController();
   final phoneCtrl = TextEditingController();
+  bool errorName = false,
+      errorEmail = false,
+      errorPassword = false,
+      errorPhone = false,
+      valid = true;
+
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -61,19 +68,21 @@ class __FormState extends State<_Form> {
             CustonInput(
               icon: Icons.person_outline,
               placeholder: "Name",
+              isError: errorName,
               keyBoardtype: TextInputType.text,
               textController: nameCrtl,
             ),
             CustonInput(
-              icon: Icons.lock_outlined,
+              icon: Icons.phone_android_outlined,
               placeholder: "Number",
+              isError: errorPhone,
               keyBoardtype: TextInputType.phone,
-              isPasword: true,
               textController: phoneCtrl,
             ),
             CustonInput(
               icon: Icons.email_outlined,
               placeholder: "Email",
+              isError: errorEmail,
               keyBoardtype: TextInputType.emailAddress,
               textController: emailCrtl,
             ),
@@ -82,11 +91,25 @@ class __FormState extends State<_Form> {
               placeholder: "Password",
               keyBoardtype: TextInputType.visiblePassword,
               isPasword: true,
+              isError: errorPassword,
               textController: paswordCtrl,
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            !valid
+                ? Center(
+                    child: Text(
+                    "Campos Obligatorios",
+                    style: TextStyle(fontSize: 15.0, color: Colors.red),
+                  ))
+                : Center(),
+            SizedBox(
+              height: 10,
             ),
             ButtomBlue(
                 makeFn: () {
-                  login();
+                  register();
                 },
                 textButton: "Login")
           ],
@@ -95,7 +118,41 @@ class __FormState extends State<_Form> {
     );
   }
 
-  login() {
-    print(emailCrtl.text);
+  register() {
+    validatedField();
+    setState(() {});
+  }
+
+  bool validatedField() {
+    if (!validatedEmail(emailCrtl.text)) {
+      errorEmail = true;
+    } else {
+      errorEmail = false;
+    }
+
+    if (!isInputEmpty(nameCrtl.text)) {
+      errorName = true;
+    } else {
+      errorName = false;
+    }
+    if (!isInputEmpty(paswordCtrl.text)) {
+      errorPassword = true;
+    } else {
+      errorPassword = false;
+    }
+    if (!isInputEmpty(phoneCtrl.text)) {
+      errorPhone = true;
+    } else {
+      errorPhone = false;
+    }
+
+    if (errorEmail || errorName || errorPassword || errorPhone) {
+      valid = false;
+    } else {
+      valid = true;
+    }
+    print(errorEmail);
+
+    return valid;
   }
 }

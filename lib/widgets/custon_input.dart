@@ -6,6 +6,7 @@ class CustonInput extends StatelessWidget {
   final TextEditingController textController;
   final TextInputType keyBoardtype;
   final bool isPasword;
+  final bool isError;
 
   const CustonInput(
       {Key? key,
@@ -13,7 +14,8 @@ class CustonInput extends StatelessWidget {
       required this.placeholder,
       required this.textController,
       this.keyBoardtype = TextInputType.text,
-      this.isPasword = false})
+      this.isPasword = false,
+      this.isError = false})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -35,6 +37,12 @@ class CustonInput extends StatelessWidget {
         obscureText: this.isPasword,
         keyboardType: this.keyBoardtype,
         decoration: InputDecoration(
+            suffixIcon: this.isError
+                ? Icon(
+                    Icons.error_outline,
+                    color: Colors.red,
+                  )
+                : null,
             prefixIcon: Icon(this.icon),
             focusedBorder: InputBorder.none,
             border: InputBorder.none,

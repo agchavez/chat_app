@@ -9,27 +9,24 @@ class UserPage extends StatelessWidget {
     User(
         email: 'lizbeth@email.com',
         name: "Lizbeth Rivera",
-        phone: "32762869",
-        msj: 2,
+        phoneNumber: 32762869,
         online: true,
         img: "assets/porfile1.png",
-        uid: "1"),
+        id: "1"),
     User(
         email: 'agchavez@email.com',
         name: "Angel Chavez",
-        phone: "31998850",
+        phoneNumber: 31998850,
         img: "assets/porfile2.png",
-        msj: 0,
         online: false,
-        uid: "3"),
+        id: "3"),
     User(
         email: 'jose@email.com',
         name: "Jose Martin",
-        phone: "31998850",
+        phoneNumber: 31998850,
         img: "",
-        msj: 5,
         online: true,
-        uid: "2")
+        id: "2")
   ];
 
   RefreshController _refreshController =
@@ -96,7 +93,7 @@ class UserPage extends StatelessWidget {
                 color: user.online ? Colors.green : null,
                 borderRadius: BorderRadius.circular(100)),
           ),
-          Text(user.phone),
+          Text('${user.phoneNumber}'),
         ],
       ),
       leading: CircleAvatar(
@@ -108,20 +105,20 @@ class UserPage extends StatelessWidget {
                   )
                 : Text(user.name.substring(0, 2))),
       ),
-      trailing: Container(
-        width: 25,
-        height: 25,
-        child: user.msj > 0
-            ? Center(
-                child: Text(
-                "12",
-                style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
-              ))
-            : null,
-        decoration: BoxDecoration(
-            color: user.msj > 0 ? Colors.green : null,
-            borderRadius: BorderRadius.circular(100)),
-      ),
+      // trailing: Container(
+      //   width: 25,
+      //   height: 25,
+      //   child: user.msj > 0
+      //       ? Center(
+      //           child: Text(
+      //           "12",
+      //           style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
+      //         ))
+      //       : null,
+      //   decoration: BoxDecoration(
+      //       color: user.msj > 0 ? Colors.green : null,
+      //       borderRadius: BorderRadius.circular(100)),
+      // ),
     );
   }
 
