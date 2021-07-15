@@ -1,10 +1,15 @@
 import 'package:chat_app/models/user_model.dart';
+import 'package:chat_app/services/auth_services.dart';
+import 'package:chat_app/services/storage_service.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class UserPage extends StatelessWidget {
+  final storage = new StorageService();
+
   final usuarios = [
     User(
         email: 'lizbeth@email.com',
@@ -34,10 +39,12 @@ class UserPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final authService = Provider.of<AuthServices>(context);
+    User user = authService.user;
     return Scaffold(
         appBar: AppBar(
           title: Text(
-            'Gabriel Chavez',
+            user.name,
             style: TextStyle(color: Colors.black87),
           ),
           elevation: 1,
@@ -47,10 +54,14 @@ class UserPage extends StatelessWidget {
               Icons.exit_to_app_outlined,
               color: Colors.black54,
             ),
-            onPressed: () {},
+            onPressed: () async {
+              await storage.deleteValue("token");
+              Navigator.popAndPushNamed(context, "login");
+            },
           ),
           actions: [
             Container(
+              margin: EdgeInsets.only(right: 5),
               child: Icon(
                 Icons.check_circle,
                 color: Colors.green,

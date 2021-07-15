@@ -1,9 +1,12 @@
+import 'package:chat_app/services/auth_services.dart';
+import 'package:chat_app/utils/alerts.dart';
 import 'package:chat_app/utils/validate-field.dart';
 import 'package:chat_app/widgets/buttonBlue.dart';
 import 'package:chat_app/widgets/custon_input.dart';
 import 'package:chat_app/widgets/labels_footer.dart';
 import 'package:chat_app/widgets/logo_app.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class RegisterPage extends StatelessWidget {
   const RegisterPage({Key? key}) : super(key: key);
@@ -54,6 +57,7 @@ class __FormState extends State<_Form> {
       errorEmail = false,
       errorPassword = false,
       errorPhone = false,
+      charging = false,
       valid = true;
 
   @override
@@ -107,20 +111,41 @@ class __FormState extends State<_Form> {
             SizedBox(
               height: 10,
             ),
-            ButtomBlue(
-                makeFn: () {
-                  register();
-                },
-                textButton: "Login")
+            !charging
+                ? ButtomBlue(
+                    makeFn: () {
+                      register();
+                    },
+                    textButton: "Register")
+                : CircularProgressIndicator()
           ],
         ),
       ),
     );
   }
 
-  register() {
-    validatedField();
-    setState(() {});
+  register() async {
+    FocusScope.of(context).unfocus();
+    setState(() {
+      charging = true;
+    });
+    if (!validatedField()) {
+      setState(() {
+        charging = false;
+      });
+      return;
+    }
+    setState(() {
+      charging = false;
+    });
+    final authService = Provider.of<AuthServices>(context, listen: false);
+    final resp = await authService.register(emailCrtl.text, paswordCtrl.text,
+        nameCrtl.text, int.parse(phoneCtrl.text));
+    if (resp) {
+      Navigator.popAndPushNamed(context, "user");
+    } else {
+      showAlert(context, "Error", "Correo o numero de telefono ya registrado");
+    }
   }
 
   bool validatedField() {
@@ -151,8 +176,6 @@ class __FormState extends State<_Form> {
     } else {
       valid = true;
     }
-    print(errorEmail);
-
     return valid;
   }
 }

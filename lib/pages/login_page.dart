@@ -1,5 +1,7 @@
 import 'package:chat_app/services/auth_services.dart';
+import 'package:chat_app/utils/alerts.dart';
 import 'package:chat_app/utils/validate-field.dart';
+import 'package:chat_app/widgets/alert_dialog.dart';
 import 'package:chat_app/widgets/buttonBlue.dart';
 import 'package:chat_app/widgets/custon_input.dart';
 import 'package:chat_app/widgets/labels_footer.dart';
@@ -122,10 +124,16 @@ class __FormState extends State<_Form> with TickerProviderStateMixin {
       return;
     }
     final authService = Provider.of<AuthServices>(context, listen: false);
-    await authService.login(emailCrtl.text, paswordCtrl.text);
+    final resp = await authService.login(emailCrtl.text, paswordCtrl.text);
     setState(() {
       charging = false;
     });
+    print(resp);
+    if (resp) {
+      Navigator.popAndPushNamed(context, "user");
+    } else {
+      showAlert(context, "Error", "Correo o contraseña incorrectas");
+    }
   }
 
   bool validatedField() {
