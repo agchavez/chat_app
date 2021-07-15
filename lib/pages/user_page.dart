@@ -1,38 +1,31 @@
+import 'package:chat_app/models/getUser_response.dart';
 import 'package:chat_app/models/user_model.dart';
 import 'package:chat_app/services/auth_services.dart';
+import 'package:chat_app/services/chat_service.dart';
+import 'package:chat_app/services/socket_service.dart';
 import 'package:chat_app/services/storage_service.dart';
+import 'package:chat_app/services/user_service.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
-class UserPage extends StatelessWidget {
+class UserPage extends StatefulWidget {
+  @override
+  _UserPageState createState() => _UserPageState();
+}
+
+class _UserPageState extends State<UserPage> {
   final storage = new StorageService();
 
-  final usuarios = [
-    User(
-        email: 'lizbeth@email.com',
-        name: "Lizbeth Rivera",
-        phoneNumber: 32762869,
-        online: true,
-        img: "assets/porfile1.png",
-        id: "1"),
-    User(
-        email: 'agchavez@email.com',
-        name: "Angel Chavez",
-        phoneNumber: 31998850,
-        img: "assets/porfile2.png",
-        online: false,
-        id: "3"),
-    User(
-        email: 'jose@email.com',
-        name: "Jose Martin",
-        phoneNumber: 31998850,
-        img: "",
-        online: true,
-        id: "2")
-  ];
+  List usuarios = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _setUser();
+  }
 
   RefreshController _refreshController =
       RefreshController(initialRefresh: false);
@@ -40,6 +33,7 @@ class UserPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final authService = Provider.of<AuthServices>(context);
+    final socketService = Provider.of<SocketService>(context, listen: true);
     User user = authService.user;
     return Scaffold(
         appBar: AppBar(
@@ -56,17 +50,22 @@ class UserPage extends StatelessWidget {
             ),
             onPressed: () async {
               await storage.deleteValue("token");
+              socketService.disconect();
               Navigator.popAndPushNamed(context, "login");
             },
           ),
           actions: [
             Container(
-              margin: EdgeInsets.only(right: 5),
-              child: Icon(
-                Icons.check_circle,
-                color: Colors.green,
-              ),
-            )
+                margin: EdgeInsets.only(right: 5),
+                child: socketService.serverStatus == ServerStatus.Online
+                    ? Icon(
+                        Icons.check_circle,
+                        color: Colors.green,
+                      )
+                    : Icon(
+                        Icons.error_outline_outlined,
+                        color: Colors.red,
+                      ))
           ],
         ),
         body: SmartRefresher(
@@ -93,6 +92,11 @@ class UserPage extends StatelessWidget {
 
   ListTile _userListTile(User user) {
     return ListTile(
+      onTap: () {
+        final chatService = Provider.of<ChatService>(context, listen: false);
+        chatService.userTo = user;
+        Navigator.pushNamed(context, "chat");
+      },
       title: Text(user.name),
       subtitle: Row(
         children: [
@@ -101,7 +105,7 @@ class UserPage extends StatelessWidget {
             height: 10,
             width: 10,
             decoration: BoxDecoration(
-                color: user.online ? Colors.green : null,
+                color: user.online ? Colors.green : Colors.red,
                 borderRadius: BorderRadius.circular(100)),
           ),
           Text('${user.phoneNumber}'),
@@ -134,8 +138,10 @@ class UserPage extends StatelessWidget {
   }
 
   _setUser() async {
-    // monitor network fetch
-    await Future.delayed(Duration(milliseconds: 1000));
+    final userService = UserService();
+    usuarios = await userService.getUser();
+
+    setState(() {});
     // if failed,use refreshFailed()
     _refreshController.refreshCompleted();
   }

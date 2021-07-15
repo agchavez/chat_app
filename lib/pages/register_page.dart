@@ -1,4 +1,5 @@
 import 'package:chat_app/services/auth_services.dart';
+import 'package:chat_app/services/socket_service.dart';
 import 'package:chat_app/utils/alerts.dart';
 import 'package:chat_app/utils/validate-field.dart';
 import 'package:chat_app/widgets/buttonBlue.dart';
@@ -139,9 +140,11 @@ class __FormState extends State<_Form> {
       charging = false;
     });
     final authService = Provider.of<AuthServices>(context, listen: false);
+    final socketServer = Provider.of<SocketService>(context, listen: false);
     final resp = await authService.register(emailCrtl.text, paswordCtrl.text,
         nameCrtl.text, int.parse(phoneCtrl.text));
     if (resp) {
+      socketServer.connect();
       Navigator.popAndPushNamed(context, "user");
     } else {
       showAlert(context, "Error", "Correo o numero de telefono ya registrado");

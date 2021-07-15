@@ -31,6 +31,7 @@ class User {
         name: json["name"],
         phoneNumber: json["phoneNumber"],
         id: json["id"],
+        online: json["online"],
       );
 
   Map<String, dynamic> toJson() => {

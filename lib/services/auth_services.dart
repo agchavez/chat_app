@@ -22,7 +22,7 @@ class AuthServices with ChangeNotifier {
     autenticated = true;
     LoginResponse loginResponse;
     final data = {"email": email, "password": password};
-    final resp = await http.post(Uri.parse('${Enviroment.apiurl}/user/login'),
+    final resp = await http.post(Uri.parse('${Enviroment.apiurl}/auth/login'),
         body: jsonEncode(data), headers: {'Content-Type': 'application/json'});
 
     if (resp.statusCode == 200) {
@@ -39,7 +39,7 @@ class AuthServices with ChangeNotifier {
   Future<bool> isLoggedIn() async {
     try {
       final token = await storage.getValue("token");
-      final resp = await http.get(Uri.parse('${Enviroment.apiurl}/user/renew'),
+      final resp = await http.get(Uri.parse('${Enviroment.apiurl}/auth/renew'),
           headers: {'Content-Type': 'application/json', "x-token": token});
       if (resp.statusCode == 200) {
         final loginResponse = loginResponseFromJson(resp.body);

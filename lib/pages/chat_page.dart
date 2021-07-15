@@ -1,8 +1,11 @@
 import 'dart:io';
 
+import 'package:chat_app/models/user_model.dart';
+import 'package:chat_app/services/chat_service.dart';
 import 'package:chat_app/widgets/chat_menssage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ChatPage extends StatefulWidget {
   @override
@@ -17,30 +20,37 @@ class _ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
   List<ChatMenssage> _menssage = [];
   @override
   Widget build(BuildContext context) {
+    final chatService = Provider.of<ChatService>(context, listen: true);
+    User userTo = chatService.userTo;
     return Scaffold(
         appBar: AppBar(
-          elevation: 0,
-          backgroundColor: Colors.blue[400],
+          elevation: 2,
+          iconTheme: IconThemeData(color: Colors.blue[400]),
+          backgroundColor: Colors.white,
           title: Center(
-            child: Column(
-              children: [
-                CircleAvatar(
-                  maxRadius: 18,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(18),
-                    child: Image(
-                      image: AssetImage("assets/porfile1.png"),
-                    ),
+            child: Container(
+              margin: EdgeInsets.only(right: 55),
+              child: Column(
+                children: [
+                  CircleAvatar(
+                    maxRadius: 18,
+                    child: ClipRRect(
+                        borderRadius: BorderRadius.circular(18),
+                        child: userTo.img != ""
+                            ? Image(
+                                image: NetworkImage(userTo.img),
+                              )
+                            : Text(userTo.name.substring(0, 2))),
                   ),
-                ),
-                SizedBox(
-                  height: 1,
-                ),
-                Text(
-                  "Lizbeth Rivera",
-                  style: TextStyle(fontSize: 14, color: Colors.black),
-                )
-              ],
+                  SizedBox(
+                    height: 1,
+                  ),
+                  Text(
+                    userTo.name,
+                    style: TextStyle(fontSize: 14, color: Colors.black),
+                  )
+                ],
+              ),
             ),
           ),
         ),
