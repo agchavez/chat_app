@@ -24,7 +24,7 @@ class AuthServices with ChangeNotifier {
     final data = {"email": email, "password": password};
     final resp = await http.post(Uri.parse('${Enviroment.apiurl}/auth/login'),
         body: jsonEncode(data), headers: {'Content-Type': 'application/json'});
-
+    print(resp.body);
     if (resp.statusCode == 200) {
       loginResponse = loginResponseFromJson(resp.body);
       this.user = loginResponse.user;
@@ -41,6 +41,7 @@ class AuthServices with ChangeNotifier {
       final token = await storage.getValue("token");
       final resp = await http.get(Uri.parse('${Enviroment.apiurl}/auth/renew'),
           headers: {'Content-Type': 'application/json', "x-token": token});
+
       if (resp.statusCode == 200) {
         final loginResponse = loginResponseFromJson(resp.body);
         this.user = loginResponse.user;
@@ -64,9 +65,8 @@ class AuthServices with ChangeNotifier {
       "name": name,
       "phoneNumber": phoneNumber
     };
-    final resp = await http.post(Uri.parse('${Enviroment.apiurl}/user/new'),
+    final resp = await http.post(Uri.parse('${Enviroment.apiurl}/auth/new'),
         body: jsonEncode(data), headers: {'Content-Type': 'application/json'});
-
     if (resp.statusCode == 200) {
       final loginResponse = loginResponseFromJson(resp.body);
       this.user = loginResponse.user;

@@ -1,4 +1,6 @@
+import 'package:chat_app/services/auth_services.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ChatMenssage extends StatelessWidget {
   final String texto;
@@ -16,13 +18,15 @@ class ChatMenssage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final authServide = Provider.of<AuthServices>(context, listen: false);
     return FadeTransition(
       opacity: animatedCrtl,
       child: SizeTransition(
         sizeFactor:
             CurvedAnimation(curve: Curves.easeOut, parent: animatedCrtl),
         child: Container(
-          child: this.uid == '123' ? _myMenssage() : _noMyMenssage(),
+          child:
+              this.uid == authServide.user.id ? _myMenssage() : _noMyMenssage(),
         ),
       ),
     );
@@ -75,7 +79,8 @@ class ChatMenssage extends StatelessWidget {
           ),
           Container(
               alignment: Alignment.centerLeft,
-              child: Text("${this.toString().substring(0, 10)}",
+              margin: EdgeInsets.only(right: 5),
+              child: Text("${this.date.hour}:${this.date.minute}",
                   style: TextStyle(fontSize: 12))),
         ],
       ),

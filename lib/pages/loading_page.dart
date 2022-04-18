@@ -44,7 +44,7 @@ class LoadingPage extends StatelessWidget {
     if (auth) {
       // Conectar con el socket
       socketServer.connect();
-      Navigator.popAndPushNamed(context, "user");
+      Navigator.pushReplacementNamed(context, "user");
     } else {
       Navigator.popAndPushNamed(context, "login");
     }

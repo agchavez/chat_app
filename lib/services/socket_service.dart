@@ -25,10 +25,13 @@ class SocketService with ChangeNotifier {
       'forceNew': true,
       'extraHeaders': {'x-token': token}
     });
-
+    print(
+      token,
+    );
     this._socket.on('connect', (_) {
       this._serverStatus = ServerStatus.Online;
       notifyListeners();
+      print('conectado');
     });
 
     this._socket.on('disconnect', (_) {
